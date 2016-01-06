@@ -1,0 +1,35 @@
+/*
+ * 函数：print_string
+ * 功能：打印字符串。
+ * 参数：
+ * 		%ds:(%si)：字符串首地址。
+ *		%bh：待打印的字符的属性。
+ * 返回值：
+ * 		%ax：打印的字符数
+ */	
+print_string:
+	push %bp
+	mov %sp, %bp
+	push %cx
+	
+	mov $VGA_SEG, %ax
+	mov %ax, %es
+	
+	xor %ax, %ax
+	xor %cx, %cx
+	xor %di, %di
+1:	mov (%si), %al
+	test %al, %al
+	jz 2f
+	mov %bh, %ah
+	mov %ax, %es:(%di)
+	inc %si
+	add $2, %di
+	inc %cx
+	jmp 1b
+	
+2:	mov %cx, %ax
+	pop %cx
+	mov %bp, %sp
+	pop %bp
+	ret
